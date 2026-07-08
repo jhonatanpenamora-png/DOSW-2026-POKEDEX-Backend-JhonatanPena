@@ -1,0 +1,35 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: false
+    open-in-view: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: test-client-id
+            client-secret: test-client-secret
+
+  flyway:
+    enabled: false
+
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/test_pokedex_stats
+
+app:
+  jwt:
+    secret: dGVzdC1zZWNyZXQta2V5LWZvci1wdXJwb3Nlcy1vZi10ZXN0aW5nLWp3dA==
+    expiration-ms: 86400000

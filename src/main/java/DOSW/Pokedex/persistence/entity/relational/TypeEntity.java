@@ -1,0 +1,22 @@
+package DOSW.Pokedex.persistence.entity.relational;
+
+import jakarta.persistence.*;
+import lombok.*;
+
+@Entity
+@Table(name = "types")
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Builder
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+public class TypeEntity {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EqualsAndHashCode.Include
+    private Long id;
+
+    @Column(nullable = false, unique = true, length = 50)
+    private String name;
+}
