@@ -49,6 +49,10 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-oauth2-client</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
+		</dependency>
 
 		<dependency>
 			<groupId>org.postgresql</groupId>
@@ -115,6 +119,7 @@
 			<artifactId>h2</artifactId>
 			<scope>test</scope>
 		</dependency>
+
 	</dependencies>
 
 	<build>
@@ -182,7 +187,6 @@
 							<goal>check</goal>
 						</goals>
 						<configuration>
-							<!-- TODO: subir este threshold a 0.70 cuando se agreguen tests de controllers, security y persistencia -->
 							<rules>
 								<rule>
 									<element>BUNDLE</element>
@@ -190,7 +194,7 @@
 										<limit>
 											<counter>LINE</counter>
 											<value>COVEREDRATIO</value>
-											<minimum>0.10</minimum>
+											<minimum>0.70</minimum>
 										</limit>
 									</limits>
 								</rule>

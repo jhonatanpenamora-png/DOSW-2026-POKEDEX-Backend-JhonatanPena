@@ -1,159 +1,267 @@
 # PokeData OS — Pokédex REST API
 
-API REST de Pokédex con autenticación Google OAuth2, arquitectura limpia por capas y doble persistencia (PostgreSQL + MongoDB). Construida con Java 21, Spring Boot 3.3.5 y despliegue basado en Docker Compose.
+API REST de Pokédex con autenticación Google OAuth2, arquitectura MVC y doble persistencia (PostgreSQL + MongoDB). Construida con Java 21, Spring Boot 3.3.5 y despliegue basado en Docker Compose.
 
 ---
 
-## Arquitectura — Clean Architecture (5 Capas)
+## Brand Identity
+
+```
+⚡ PokeData OS — Donde los datos encuentran su forma
+```
+
+| Atributo | Descripción |
+|---|---|
+| **Estética** | Dark Mode | Cyberpunk limpio | Glassmorphism |
+| **Mascota** | Rotom (Forma Pokédex) — Eléctrico/Fantasma |
+| **Colores** | ⚫ Black Cyber `#121214` · 🔴 Red Rotom `#FF3E3E` · 🔵 Azul Eléctrico `#00E5FF` |
+| **Tipografía** | Orbitron (títulos) · Inter (cuerpo) · JetBrains Mono (código) |
+| **Logo** | "PokeData OS" con Pokéball digital reemplazando la "O" |
+
+📖 Manual completo en [`IDENTITY_MANUAL.md`](IDENTITY_MANUAL.md).
+
+---
+
+## Arquitectura — MVC (Modelo-Vista-Controlador)
+
+Arquitectura MVC estricta donde los Controladores manejan requests/responses, los Servicios contienen la lógica de negocio, y los Repositorios gestionan la persistencia. Sin capas de abstracción adicionales (sin puertos, sin adapters).
 
 ```
 ┌─────────────────────────────────────────────────┐
-│                  CONTROLLER                      │
-│  (DTOs, Swagger, ExceptionHandler, Mappers)      │
+│               CONTROLLER LAYER                   │
+│  @RestController + DTOs + Mappers + Handler      │
+│  (Auth, Pokemon, Favorite, Team Controllers)      │
 ├─────────────────────────────────────────────────┤
-│                    CORE                          │
-│  (Modelos, Puertos, Interfaces de Servicio)      │
+│               SERVICE LAYER                       │
+│  @Service + Modelos de dominio                    │
+│  (Auth, Pokemon, Favorite, Team Services)         │
 ├─────────────────────────────────────────────────┤
-│                 PERSISTENCE                      │
-│  (JPA Entities, MongoDB Documents, Repos,        │
-│   Adapters, Mappers Entity↔Domain)               │
+│              REPOSITORY LAYER                     │
+│  JPA Repositories + Mongo Repositories            │
+│  (13 repos: PostgreSQL + MongoDB)                 │
 ├─────────────────────────────────────────────────┤
-│              CONFIG + SECURITY                   │
-│  (JWT, OAuth2, CORS, OpenAPI, Async)             │
+│              SECURITY LAYER                       │
+│  JwtAuthFilter + OAuth2 + SecurityConfig + CORS   │
 ├─────────────────────────────────────────────────┤
-│              INFRASTRUCTURE                      │
-│  (Docker, Flyway, Spring Boot)                   │
+│              INFRASTRUCTURE                       │
+│  Docker Compose + Flyway + Spring Boot + OpenAPI  │
 └─────────────────────────────────────────────────┘
 ```
 
-Cada capa se comunica con la siguiente a través de **puertos** (interfaces), garantizando bajo acoplamiento y alta testabilidad.
+Flujo de datos: `Controller → Service → Repository`
+
+Sin puertos, sin interfaces de servicio, sin capa de dominio separada. Los servicios inyectan repositorios directamente. MVC puro como exige el estándar del curso.
 
 ---
 
-## Diagramas C4
+## Diagramas (5 diagramas en draw.io)
 
-### C1 — Contexto del Sistema
+Los diagramas del proyecto fueron realizados con **draw.io** (formato `.drawio`) y se encuentran en el directorio [`diagrams/`](diagrams/).
 
-```mermaid
-C4Context
-  title Diagrama de Contexto — PokeData OS
+---
 
-  Person(usuario, "Usuario", "Entrenador Pokémon que consulta datos, arma equipos y administra favoritos")
-  Person(admin, "Administrador", "Gestiona el catálogo de Pokémon, tipos, habilidades y movimientos")
+### 4.1 C1 — Diagrama de Contexto (Nivel 1)
 
-  System_Boundary(pokedata, "PokeData OS") {
-    System(api, "PokeData API", "API REST con autenticación Google OAuth2 y JWT")
-  }
+Muestra el sistema como una **caja negra** con sus actores e integraciones externas.
 
-  System_Ext(google, "Google OAuth2", "Autenticación de usuarios via Google")
-  System_Ext(frontend, "Frontend", "Cliente web (Vite/React o Angular) en localhost:5173 / :4200")
+**Archivo:** [`diagrams/c1-context.drawio`](diagrams/c1-context.drawio)
 
-  Rel(usuario, frontend, "Usa la app", "HTTPS")
-  Rel(admin, frontend, "Administra el catálogo", "HTTPS")
-  Rel(frontend, api, "Consume API REST", "HTTPS/JSON")
-  Rel(api, google, "Autenticación OAuth2", "HTTPS")
-  Rel(usuario, google, "Inicia sesión con Google", "HTTPS")
+![Diagrama de Casos de Uso](diagrams/Diagrama%20de%20casos%20de%20uso.png)
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│  Personas:    Usuario (Entrenador)    Administrador          │
+│                                                             │
+│  Sistema:     PokeData API (Spring Boot, JWT, OAuth2)       │
+│                                                             │
+│  Externos:    Google OAuth2  ·  Prototipo Figma (ref.)      │
+└─────────────────────────────────────────────────────────────┘
 ```
 
-### C2 — Contenedores
+**Actores:**
 
-```mermaid
-C4Container
-  title Diagrama de Contenedores — PokeData OS
+| Actor | Descripción |
+|---|---|
+| **Usuario** | Entrenador Pokémon que consulta datos, arma equipos y administra favoritos |
+| **Administrador** | Gestiona el catálogo de Pokémon, tipos, habilidades y movimientos |
 
-  Person(usuario, "Usuario", "Entrenador Pokémon")
+**Sistema principal:** PokeData API — API REST con autenticación Google OAuth2 y JWT, arquitectura MVC, doble persistencia (PostgreSQL + MongoDB).
 
-  System_Boundary(pokedata, "PokeData OS") {
-    Container(api, "PokeData API", "Spring Boot 3.3.5, Java 21", "API REST con autenticación JWT + OAuth2")
-    Container(db, "Base de Datos PostgreSQL", "PostgreSQL 15", "Almacena Pokémon, usuarios, equipos, favoritos y auditoría")
-    Container(mongo, "Base de Datos MongoDB", "MongoDB 7", "Almacena estadísticas de equipo, historial de vistas y contadores")
-    Container(flyway, "Flyway Migration", "Flyway", "Migraciones de esquema PostgreSQL")
-  }
+**Integraciones externas:**
+- **Google OAuth2** — Autenticación de usuarios via Google
+- **Prototipo Figma** — Referencia visual (no conectado al backend)
 
-  System_Ext(google, "Google OAuth2", "Autenticación")
+**Flujo:** Usuario/Admin → se autentican via Google OAuth2 → consumen la API REST → la API valida el token JWT y responde.
 
-  Rel(usuario, api, "Usa via frontend", "HTTPS")
-  Rel(api, db, "CRUD relacional", "JDBC, puerto 5432")
-  Rel(api, mongo, "CRUD documental", "MongoDB Driver, puerto 27017")
-  Rel(api, google, "Valida token OAuth2", "HTTPS")
-  Rel(flyway, db, "Migra esquema", "JDBC")
+---
+
+### 4.2 C2 — Diagrama de Componentes General (Nivel 2)
+
+Muestra las **5 capas internas** del sistema y sus responsabilidades principales.
+
+**Archivo:** [`diagrams/c2-components.drawio`](diagrams/c2-components.drawio)
+
+![Diagrama de Componentes](diagrams/Diagrama%20de%20componentes.png)
+
+| Capa | Color | Componentes | Responsabilidad |
+|---|---|---|---|
+| **1. Controller** | 🔴 Red Rotom | AuthController, PokemonController, FavoriteController, TeamController | Gestiona requests HTTP, validación de entrada, Swagger docs |
+| **2. Service** | 🔵 Azul Eléctrico | AuthService, PokemonService, FavoriteService, TeamService | Lógica de negocio, reglas de dominio, coordinación |
+| **3. Repository** | 🟢 Verde | 10 JPA Repositories + 3 Mongo Repositories | Persistencia directa, sin adapters ni puertos |
+| **4. Security** | 🟣 Púrpura | JwtAuthFilter, JwtService, OAuth2SuccessHandler, SecurityConfig | Autenticación JWT + OAuth2, CORS |
+| **5. Infrastructure** | 🟠 Naranja | Docker Compose, Flyway, Springdoc, Actuator | Configuración, despliegue, documentación |
+
+**Flujo de datos entre capas:**
+```
+Controller → Service → Repository → Base de Datos
+     ←          ←          ←
 ```
 
-### C3 — Componentes (Spring Boot)
+---
 
-```mermaid
-C4Component
-  title Diagrama de Componentes — PokeData API
+### 4.3 C3 — Diagrama de Componentes Específico (Flujo Pokémon)
 
-  Container_Boundary(api, "PokeData API") {
-    Component(controller, "Controller Layer", "REST Controllers + DTOs + Mappers", "Maneja requests/responses, Swagger docs")
-    Component(service, "Core Service Layer", "Servicios + Modelos + Puertos", "Lógica de negocio pura, sin dependencias de infraestructura")
-    Component(persistence, "Persistence Layer", "Adapters + Mappers + Repositories", "Implementa puertos, conversión Entity↔Domain")
-    Component(security, "Security Layer", "JWT + OAuth2 + CORS", "Filtro JWT, handler OAuth2 Google, configuración de seguridad")
-    Component(config, "Config Layer", "Beans de configuración", "OpenAPI, CORS, Async (Virtual Threads)")
+Muestra el flujo completo de una petición `GET /api/v1/pokemon/{id}` a través de todas las capas.
 
-    Rel(controller, service, "Llama", "Servicios + DTOs")
-    Rel(service, persistence, "Usa", "Puertos de persistencia")
-    Rel(security, service, "Usa", "AuthService para crear usuarios")
-  }
+**Archivo:** [`diagrams/c3-pokemon-flow.drawio`](diagrams/c3-pokemon-flow.drawio)
 
-  Container(swagger, "Swagger UI", "Springdoc OpenAPI", "Documentación interactiva en /swagger-ui/")
-  Rel(controller, swagger, "Expone", "Anotaciones OpenAPI")
+![Diagrama de Componentes Específico](diagrams/Diagrama%20de%20componentes%20especifico.png)
+
+**Pasos del flujo:**
+
+| Paso | Capa | Acción |
+|---|---|---|
+| **1** | Cliente | `GET /api/v1/pokemon/25` con `Authorization: Bearer <JWT>` |
+| **2** | Security (JwtAuthFilter) | Valida token JWT, extrae usuario, setea SecurityContext |
+| **3** | Controller (PokemonController) | Recibe request, llama a `pokemonService.findById(25L)` |
+| **4** | Service (PokemonService) | Llama a `pokemonRepository.findById(25L)` |
+| **5** | Repository (PokemonRepository) | Genera SQL con JOINs a tablas relacionadas |
+| **6** | PostgreSQL | Ejecuta query, retorna `PokemonEntity` con datos completos |
+| **7** | Service → Mapper | Mapea `Entity → DTO` via MapStruct (`PokemonMapper`) |
+| **8** | Controller | Envuelve DTO en `ResponseEntity<PokemonResponseDTO>` |
+| **9** | Cliente | Recibe `HTTP 200 OK` con JSON del Pokémon |
+
+**Ejemplo de respuesta:**
+```json
+{
+  "id": 25,
+  "nationalNumber": 25,
+  "name": "Pikachu",
+  "types": [{ "name": "Eléctrico" }],
+  "stats": { "hp": 35, "attack": 55, "speed": 90 },
+  "abilities": ["Static", "Lightning Rod"],
+  "evolutions": [
+    { "evolvesFrom": 172, "evolvesTo": 25, "trigger": "level-up", "minLevel": 1 }
+  ]
+}
 ```
 
-### C4 — Entidades y Relaciones
+---
 
-```mermaid
-classDiagram
-  class Pokemon {
-    +Long id
-    +int nationalNumber
-    +String name
-    +String description
-    +String imageUrl
-    +String height
-    +String weight
-    +int baseExperience
-    +RarityLevel rarityLevel
-    +boolean isLegendary
-    +Region region
-    +List~Type~ types
-    +PokemonStats stats
-    +List~Ability~ abilities
-    +List~Evolution~ evolutions
-    +List~Move~ moves
-  }
+### 4.4 C4 — Diagrama de Clases
 
-  class User {
-    +Long id
-    +String email
-    +String name
-    +String avatarUrl
-    +String providerId
-    +String role
-    +boolean enabled
-  }
+Muestra las **clases principales (entidades JPA)**, sus atributos y relaciones. Foco en los objetos de la capa Modelo.
 
-  class Team {
-    +Long id
-    +String name
-    +String description
-    +User owner
-    +List~TeamPokemon~ pokemons
-  }
+**Archivo:** [`diagrams/c4-classes.drawio`](diagrams/c4-classes.drawio)
 
-  class Favorite {
-    +Long id
-    +User user
-    +Pokemon pokemon
-  }
+![Diagrama de Clases](diagrams/Diagrama%20de%20clases%20capa%20core.png)
 
-  User "1" --> "*" Team : owns
-  User "1" --> "*" Favorite : has
-  Team "1" --> "*" TeamPokemon : contains
-  TeamPokemon "*" --> "1" Pokemon : references
-  Favorite "*" --> "1" Pokemon : references
+**Entidades principales:**
+
+| Entidad | Tabla | Descripción |
+|---|---|---|
+| `PokemonEntity` | `pokemon` | Catálogo de Pokémon con datos base, tipos, estadísticas, evoluciones |
+| `PokemonStatsEntity` | `pokemon_stats` | Estadísticas base (HP, Attack, Defense, Sp.Atk, Sp.Def, Speed) — OneToOne con Pokémon |
+| `RegionEntity` | `region` | Regiones (Kanto, Johto, etc.) — ManyToOne desde Pokémon |
+| `TypeEntity` | `type` | Tipos Pokémon (Eléctrico, Fuego, etc.) — ManyToMany con Pokémon via `pokemon_type` |
+| `AbilityEntity` | `ability` | Habilidades — ManyToMany con Pokémon via `pokemon_ability` |
+| `MoveEntity` | `move` | Movimientos — ManyToMany con Pokémon via `pokemon_move` |
+| `EvolutionEntity` | `evolution` | Cadenas evolutivas — OneToMany desde Pokémon |
+| `UserEntity` | `users` | Usuarios autenticados via Google OAuth2 |
+| `TeamEntity` | `teams` | Equipos Pokémon del usuario |
+| `TeamPokemonEntity` | `team_pokemon` | Relación N:M entre Team y Pokémon con slot position |
+| `FavoriteEntity` | `favorites` | Favoritos del usuario — UniqueConstraint(user_id, pokemon_id) |
+| `AuditLogEntity` | `audit_log` | Auditoría de acciones del sistema |
+
+**Relaciones clave:**
+- `PokemonEntity` 1:1 `PokemonStatsEntity`
+- `PokemonEntity` N:1 `RegionEntity`
+- `PokemonEntity` N:M `TypeEntity` (via `pokemon_type`)
+- `PokemonEntity` N:M `AbilityEntity` (via `pokemon_ability`)
+- `PokemonEntity` N:M `MoveEntity` (via `pokemon_move`)
+- `PokemonEntity` 1:N `EvolutionEntity`
+- `UserEntity` 1:N `TeamEntity` → 1:N `TeamPokemonEntity` → N:1 `PokemonEntity`
+- `UserEntity` 1:N `FavoriteEntity` → N:1 `PokemonEntity`
+
+---
+
+### 4.5 C5 — Diagrama Entidad-Relación (PostgreSQL) y Documentos (MongoDB)
+
+Dos sub-diagramas en un mismo archivo:
+
+**Archivo:** [`diagrams/c5-er-mongodb.drawio`](diagrams/c5-er-mongodb.drawio)
+
+![Diagrama Entidad Relación](diagrams/Diagrama%20entidad%20relacion.png)
+
+#### Parte A: Entidad-Relación PostgreSQL (10 tablas)
+
 ```
+┌──────────┐    ┌────────────────┐    ┌──────────┐
+│  region  │    │  pokemon_type  │    │   type   │
+├──────────┤    │ (N:M join)     │    ├──────────┤
+│ PK id    │◄───│ FK pokemon_id  │───►│ PK id    │
+└──────────┘    │ FK type_id     │    └──────────┘
+                └────────────────┘
+      │
+┌──────────┐    ┌────────────────┐    ┌──────────┐
+│ pokemon  │    │pokemon_ability │    │ ability  │
+├──────────┤    │ (N:M join)     │    ├──────────┤
+│ PK id    │◄───│ FK pokemon_id  │───►│ PK id    │
+│ FK reg_id│    │ FK ability_id  │    └──────────┘
+└──────────┘    └────────────────┘
+      │
+      ├─── 1:1 ─── pokemon_stats
+      ├─── 1:N ─── evolution
+      └─── 1:N ─── pokemon_move ── N:1 ── move
+
+┌──────────┐    ┌──────────┐    ┌──────────────┐
+│  users   │    │  teams   │    │ team_pokemon │
+├──────────┤    ├──────────┤    ├──────────────┤
+│ PK id    │───►│ PK id    │───►│ PK id        │
+│ (OAuth2) │    │ FK user  │    │ FK team      │
+└──────────┘    └──────────┘    │ FK pokemon    │
+      │                         └──────────────┘
+      └─── 1:N ─── favorites ── N:1 ── pokemon
+
+┌──────────────┐    ┌──────────┐
+│  audit_log   │    │ pokemon  │
+├──────────────┤    └──────────┘
+│ PK id        │
+│ FK user_id   │
+│ entity_type  │
+└──────────────┘
+```
+
+**Tablas:**
+| Esquema | Tablas | Propósito |
+|---|---|---|
+| **Catálogo** | `pokemon`, `pokemon_stats`, `region`, `type`, `ability`, `move`, `evolution` | Datos maestros de Pokémon |
+| **Join** | `pokemon_type`, `pokemon_ability`, `pokemon_move` | Relaciones N:M con surrogate keys |
+| **Usuarios** | `users`, `teams`, `team_pokemon`, `favorites` | Datos de usuario, equipos y favoritos |
+| **Auditoría** | `audit_log` | Trazabilidad de acciones |
+
+#### Parte B: Documentos MongoDB (3 colecciones)
+
+| Colección | Documento | Propósito | Índices |
+|---|---|---|---|
+| `team_stats` | `{ team_id, total_battles, win_rate, average_level, type_distribution, last_updated }` | Estadísticas agregadas de equipos | `team_id` (único) |
+| `pokemon_view` | `{ pokemon_id, total_views, unique_users, last_viewed, daily_views[] }` | Contador de vistas por Pokémon | `pokemon_id` (único) |
+| `view_history` | `{ user_id, pokemon_id, timestamp, action }` | Historial de vistas (serie temporal) | TTL index en `timestamp` (30 días) |
+
+**Estrategia de persistencia híbrida:**
+- **PostgreSQL** → Datos relacionales estructurados (Pokémon, usuarios, equipos, transacciones)
+- **MongoDB** → Datos analíticos y series temporales (stats, vistas, historial)
+- Los documentos MongoDB referencian IDs de las tablas SQL (no duplican datos maestros)
 
 ---
 
@@ -271,15 +379,22 @@ Con la aplicación corriendo:
 ./mvnw verify
 ```
 
-**Tests actuales:** 15 tests unitarios distribuidos en:
+**Tests actuales:** 36 tests unitarios distribuidos en:
 
 | Test Class                          | Tests | Scope                          |
 | ----------------------------------- | ----- | ------------------------------ |
 | `PokemonServiceImplTest`            | 7     | CRUD + filtros + paginación    |
 | `AuthServiceImplTest`               | 2     | Procesamiento OAuth2 + duplicados |
 | `TeamServiceImplTest`               | 3     | CRUD + validación de dueño     |
+| `JwtServiceTest`                    | 6     | Generación, validación, expiración de JWT |
+| `FavoriteServiceImplTest`           | 5     | CRUD favoritos + duplicados    |
+| `TeamControllerTest`                | 5     | Controller MVC con MockMvc     |
+| `FavoriteControllerTest`            | 3     | Controller MVC con MockMvc     |
+| `AuthControllerTest`                | 2     | Controller MVC con MockMvc     |
 | `PokemonControllerTest`             | 2     | Controller MVC con MockMvc     |
 | `PokedexApplicationTests`           | 1     | Contexto de Spring Boot        |
+
+**Cobertura JaCoCo:** Threshold actual 0.22 (22%).
 
 ---
 
@@ -360,51 +475,30 @@ docker compose down
 
 ---
 
-## Estructura del Proyecto
+## Estructura del Proyecto (MVC)
 
 ```
 src/
 ├── main/
 │   ├── java/DOSW/Pokedex/
 │   │   ├── config/          # Configuraciones globales (CORS, OpenAPI, Async)
-│   │   ├── controller/
-│   │   │   ├── api/         # Interfaces con Swagger (@SecurityRequirement, @Operation)
-│   │   │   ├── dto/         # Java Records request/response
-│   │   │   ├── handler/     # GlobalExceptionHandler con ApiError
-│   │   │   ├── impl/        # Implementaciones de controllers
-│   │   │   ├── mapper/      # Mappers DTO ↔ Domain (MapStruct)
-│   │   │   └── swagger/     # OpenApiConfig (Bearer JWT Scheme)
-│   │   ├── core/
-│   │   │   ├── exception/   # BusinessException, ResourceNotFoundException, etc.
-│   │   │   ├── model/       # @Value + @Builder domain models
-│   │   │   ├── service/
-│   │   │   │   ├── impl/    # Implementaciones de servicios
-│   │   │   │   └── interfaces/  # Servicios y puertos de persistencia
-│   │   │   ├── util/        # Utilidades (si aplica)
-│   │   │   └── validator/   # Validadores de negocio
-│   │   ├── persistence/
-│   │   │   ├── adapter/     # Implementación de puertos (JPA + MongoDB)
-│   │   │   ├── entity/
-│   │   │   │   ├── document/      # MongoDB Documents
-│   │   │   │   └── relational/    # JPA Entities
-│   │   │   ├── mapper/     # MapStruct Entity ↔ Domain
-│   │   │   └── repository/
-│   │   │       ├── document/      # MongoDB Repositories
-│   │   │       └── relational/    # JPA Repositories
-│   │   └── security/
-│   │       ├── JwtAuthFilter      # Filtro OncePerRequestFilter
-│   │       ├── JwtService         # Generación/validación HMAC-SHA
-│   │       ├── OAuth2SuccessHandler # Callback Google → JWT → frontend
-│   │       ├── SecurityConfig     # SecurityFilterChain, CORS
-│   │       └── UserDetailsServiceImpl  # UserDetailsService via puerto
+│   │   ├── controller/      # @RestController (Auth, Pokemon, Favorite, Team)
+│   │   ├── dto/             # Java Records request/response (14 DTOs)
+│   │   ├── exception/       # BusinessException, ResourceNotFoundException
+│   │   ├── handler/         # GlobalExceptionHandler con ApiError
+│   │   ├── mapper/          # MapStruct DTO ↔ Entity (3 mappers)
+│   │   ├── model/           # JPA Entities + MongoDB Documents (24 clases)
+│   │   ├── repository/      # JPA + MongoDB Repositories (13 interfaces)
+│   │   ├── security/        # JwtAuthFilter, JwtService, OAuth2, SecurityConfig
+│   │   └── service/         # @Service con lógica de negocio (5 servicios)
 │   └── resources/
-│       ├── db/migration/          # Flyway migrations (V1__init_schema.sql)
-│       ├── application.yml        # Config principal
-│       └── application-test.yml   # Perfil de tests (H2)
+│       ├── db/migration/    # Flyway migrations (V1__init_schema, V2__surrogate_keys)
+│       ├── application.yml  # Config principal (PostgreSQL, Mongo, OAuth2, JWT, Actuator)
+│       └── application-test.yml  # Perfil de tests (H2)
 └── test/
     └── java/DOSW/Pokedex/
-        ├── controller/impl/       # @WebMvcTest
-        ├── core/service/impl/     # Unit tests con mocks
+        ├── controller/      # @WebMvcTest (Auth, Pokemon, Favorite, Team)
+        ├── service/         # Unit tests con mocks (Jwt, Auth, Pokemon, Favorite, Team)
         └── PokedexApplicationTests  # @SpringBootTest
 ```
 
@@ -417,10 +511,12 @@ src/
 | **Google-only Auth**         | Sin registro por email. Usuario se crea en primer login Google (RF-001/002).  |
 | **JWT stateless**            | Sin sesiones HTTP. Token JWT en header `Authorization: Bearer <token>`.       |
 | **PostgreSQL + MongoDB**     | Datos relacionales (Pokémon, usuarios) en SQL; estadísticas y vistas en NoSQL. |
+| **MVC estricto**             | Arquitectura exigida por el curso. Sin puertos, sin adapters, sin capa de dominio separada. |
 | **Virtual Threads**          | `executor.setVirtualThreads(true)` para operaciones I/O (Java 21).            |
-| **MapStruct**                | Conversión Entity↔Domain y Domain↔DTO sin boilerplate.                        |
+| **MapStruct**                | Conversión Entity↔DTO sin boilerplate.                                        |
 | **Flyway**                   | Migraciones de esquema versionadas y repetibles.                              |
 | **Springdoc OpenAPI**        | Documentación interactiva con soporte Bearer JWT.                             |
+| **JaCoCo 0.22**              | Umbral de cobertura actual. Subir a 0.70 cuando se agreguen tests de persistencia. |
 
 ---
 

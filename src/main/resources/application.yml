@@ -38,7 +38,22 @@ server:
   servlet:
     context-path: /api
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: always
+
 app:
   jwt:
     secret: ${JWT_SECRET}
     expiration-ms: 86400000
+
+info:
+  app:
+    name: PokeData OS
+    description: API REST Pokédex - Arquitectura por Capas DOSW 2026
+    version: 0.0.1-SNAPSHOT

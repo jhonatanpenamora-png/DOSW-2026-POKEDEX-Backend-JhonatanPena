@@ -1,0 +1,61 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="app.diagrams.net" modified="2026-07-10T22:00:00.000Z" version="24.2.5" agent="PokeData OS">
+  <diagram id="c5-er-mongodb" name="C5 — ER PostgreSQL + MongoDB">
+    <mxGraphModel dx="1018" dy="683" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1700" pageHeight="1400" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title-er" value="&lt;b&gt;PostgreSQL — Relacional&lt;/b&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;fontSize=18;fontFamily=Inter;fontColor=#1E1E1E;" vertex="1" parent="1">
+          <mxGeometry x="40" y="10" width="700" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="users" value="&lt;b&gt;users&lt;/b&gt;&lt;hr&gt;id: BIGSERIAL PK&lt;br&gt;email: VARCHAR(255) UNIQUE NOT NULL&lt;br&gt;trainer_name: VARCHAR(30) UNIQUE&lt;br&gt;profile_picture: TEXT&lt;br&gt;role: VARCHAR(20) NOT NULL&lt;br&gt;active: BOOLEAN DEFAULT true&lt;br&gt;created_at: TIMESTAMP" style="shape=rect;whiteSpace=wrap;html=1;fontSize=10;fontFamily=Inter;fillColor=#E3F2FD;strokeColor=#1565C0;rounded=1;arcSize=6;overflow=hidden;align=left;verticalAlign=top;spacingLeft=4;spacingTop=4;" vertex="1" parent="1">
+          <mxGeometry x="40" y="60" width="260" height="210" as="geometry" />
+        </mxCell>
+        <mxCell id="teams" value="&lt;b&gt;teams&lt;/b&gt;&lt;hr&gt;id: BIGSERIAL PK&lt;br&gt;name: VARCHAR(30) NOT NULL&lt;br&gt;user_id: BIGINT FK&lt;br&gt;created_at: TIMESTAMP&lt;br&gt;deleted: BOOLEAN DEFAULT false" style="shape=rect;whiteSpace=wrap;html=1;fontSize=10;fontFamily=Inter;fillColor=#E8F5E9;strokeColor=#2E7D32;rounded=1;arcSize=6;overflow=hidden;align=left;verticalAlign=top;spacingLeft=4;spacingTop=4;" vertex="1" parent="1">
+          <mxGeometry x="340" y="60" width="220" height="170" as="geometry" />
+        </mxCell>
+        <mxCell id="pokemon" value="&lt;b&gt;pokemon&lt;/b&gt;&lt;hr&gt;id: BIGSERIAL PK&lt;br&gt;pokedex_number: INTEGER UNIQUE NOT NULL&lt;br&gt;name: VARCHAR(50) UNIQUE NOT NULL&lt;br&gt;primary_type: VARCHAR(20) NOT NULL&lt;br&gt;secondary_type: VARCHAR(20)&lt;br&gt;region: VARCHAR(30) NOT NULL&lt;br&gt;generation: INTEGER NOT NULL&lt;br&gt;image_url: TEXT&lt;br&gt;description: VARCHAR(500)" style="shape=rect;whiteSpace=wrap;html=1;fontSize=10;fontFamily=Inter;fillColor=#FFF3E0;strokeColor=#FB8C00;rounded=1;arcSize=6;overflow=hidden;align=left;verticalAlign=top;spacingLeft=4;spacingTop=4;" vertex="1" parent="1">
+          <mxGeometry x="600" y="60" width="280" height="240" as="geometry" />
+        </mxCell>
+        <mxCell id="favorites" value="&lt;b&gt;favorites&lt;/b&gt;&lt;hr&gt;id: BIGSERIAL PK&lt;br&gt;user_id: BIGINT FK&lt;br&gt;pokemon_id: BIGINT FK&lt;br&gt;added_at: TIMESTAMP" style="shape=rect;whiteSpace=wrap;html=1;fontSize=10;fontFamily=Inter;fillColor=#FCE4EC;strokeColor=#C62828;rounded=1;arcSize=6;overflow=hidden;align=left;verticalAlign=top;spacingLeft=4;spacingTop=4;" vertex="1" parent="1">
+          <mxGeometry x="920" y="60" width="220" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="teamMembers" value="&lt;b&gt;team_members&lt;/b&gt;&lt;hr&gt;id: BIGSERIAL PK&lt;br&gt;team_id: BIGINT FK&lt;br&gt;pokemon_id: BIGINT FK&lt;br&gt;position: INTEGER" style="shape=rect;whiteSpace=wrap;html=1;fontSize=10;fontFamily=Inter;fillColor=#E0F7FA;strokeColor=#00838F;rounded=1;arcSize=6;overflow=hidden;align=left;verticalAlign=top;spacingLeft=4;spacingTop=4;" vertex="1" parent="1">
+          <mxGeometry x="920" y="240" width="220" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="stats" value="&lt;b&gt;pokemon_stats&lt;/b&gt;&lt;hr&gt;id: BIGSERIAL PK&lt;br&gt;pokemon_id: BIGINT FK&lt;br&gt;hp: INTEGER NOT NULL&lt;br&gt;attack: INTEGER NOT NULL&lt;br&gt;defense: INTEGER NOT NULL&lt;br&gt;special_attack: INTEGER NOT NULL&lt;br&gt;special_defense: INTEGER NOT NULL&lt;br&gt;speed: INTEGER NOT NULL" style="shape=rect;whiteSpace=wrap;html=1;fontSize=10;fontFamily=Inter;fillColor=#E0F7FA;strokeColor=#00838F;rounded=1;arcSize=6;overflow=hidden;align=left;verticalAlign=top;spacingLeft=4;spacingTop=4;" vertex="1" parent="1">
+          <mxGeometry x="340" y="270" width="260" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="evolution" value="&lt;b&gt;evolution&lt;/b&gt;&lt;hr&gt;id: BIGSERIAL PK&lt;br&gt;base_pokemon_id: BIGINT FK&lt;br&gt;evolved_pokemon_id: BIGINT FK&lt;br&gt;condition: VARCHAR(100)&lt;br&gt;order: INTEGER" style="shape=rect;whiteSpace=wrap;html=1;fontSize=10;fontFamily=Inter;fillColor=#E0F7FA;strokeColor=#00838F;rounded=1;arcSize=6;overflow=hidden;align=left;verticalAlign=top;spacingLeft=4;spacingTop=4;" vertex="1" parent="1">
+          <mxGeometry x="640" y="330" width="260" height="150" as="geometry" />
+        </mxCell>
+        <mxCell id="rel-users-teams" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#2E7D32;strokeWidth=1.5;exitX=0.5;exitY=1;entryX=0.5;entryY=0;endArrow=blockThin;endFill=1;" edge="1" parent="1" source="users" target="teams"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="rel-users-favs" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#C62828;strokeWidth=1.5;exitX=0.8;exitY=1;entryX=0.2;entryY=0;endArrow=blockThin;endFill=1;" edge="1" parent="1" source="users" target="favorites"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="rel-pokemon-favs" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#C62828;strokeWidth=1.5;exitX=1;exitY=0.7;entryX=0;entryY=0.5;endArrow=blockThin;endFill=1;" edge="1" parent="1" source="favorites" target="pokemon"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="rel-teams-members" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#00838F;strokeWidth=1.5;exitX=1;exitY=0.5;entryX=0;entryY=0.2;endArrow=blockThin;endFill=1;" edge="1" parent="1" source="teams" target="teamMembers"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="rel-pokemon-stats" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#00838F;strokeWidth=1.5;exitX=0.5;exitY=1;entryX=0.5;entryY=0;endArrow=blockThin;endFill=1;" edge="1" parent="1" source="pokemon" target="stats"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="rel-pokemon-evo" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#00838F;strokeWidth=1.5;exitX=0.5;exitY=1;entryX=0.5;entryY=0;endArrow=blockThin;endFill=1;" edge="1" parent="1" source="pokemon" target="evolution"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="title-mongo" value="&lt;b&gt;MongoDB — Documental&lt;/b&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;fontSize=18;fontFamily=Inter;fontColor=#1E1E1E;" vertex="1" parent="1">
+          <mxGeometry x="40" y="520" width="700" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="teamStatsDoc" value="&lt;b&gt;team_stats&lt;/b&gt;&lt;hr&gt;{&lt;br&gt;  _id: ObjectId&lt;br&gt;  team_id: Long&lt;br&gt;  total_battles: Long&lt;br&gt;  win_rate: Double&lt;br&gt;  average_level: Double&lt;br&gt;  type_distribution: {...}&lt;br&gt;  last_updated: Date&lt;br&gt;}" style="shape=rect;whiteSpace=wrap;html=1;fontSize=10;fontFamily=Inter;fillColor=#E0F2F1;strokeColor=#00695C;rounded=1;arcSize=6;overflow=hidden;align=left;verticalAlign=top;spacingLeft=4;spacingTop=4;" vertex="1" parent="1">
+          <mxGeometry x="40" y="570" width="300" height="190" as="geometry" />
+        </mxCell>
+        <mxCell id="pokemonViewsDoc" value="&lt;b&gt;pokemon_views&lt;/b&gt;&lt;hr&gt;{&lt;br&gt;  _id: ObjectId&lt;br&gt;  pokemon_id: Long&lt;br&gt;  pokemon_name: String&lt;br&gt;  view_count: Long&lt;br&gt;  last_viewed: Date&lt;br&gt;}" style="shape=rect;whiteSpace=wrap;html=1;fontSize=10;fontFamily=Inter;fillColor=#E0F2F1;strokeColor=#00695C;rounded=1;arcSize=6;overflow=hidden;align=left;verticalAlign=top;spacingLeft=4;spacingTop=4;" vertex="1" parent="1">
+          <mxGeometry x="370" y="570" width="300" height="170" as="geometry" />
+        </mxCell>
+        <mxCell id="viewHistoryDoc" value="&lt;b&gt;view_history&lt;/b&gt;&lt;hr&gt;{&lt;br&gt;  _id: ObjectId&lt;br&gt;  user_id: Long&lt;br&gt;  pokemon_id: Long&lt;br&gt;  pokemon_name: String&lt;br&gt;  pokemon_image: String&lt;br&gt;  viewed_at: Date&lt;br&gt;}" style="shape=rect;whiteSpace=wrap;html=1;fontSize=10;fontFamily=Inter;fillColor=#E0F2F1;strokeColor=#00695C;rounded=1;arcSize=6;overflow=hidden;align=left;verticalAlign=top;spacingLeft=4;spacingTop=4;" vertex="1" parent="1">
+          <mxGeometry x="700" y="570" width="300" height="190" as="geometry" />
+        </mxCell>
+        <mxCell id="mongoLink" value="&lt;b&gt;Documentos referencian IDs de tablas SQL&lt;/b&gt;" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#00695C;strokeWidth=1.5;dashed=1;exitX=0;exitY=1;entryX=0;entryY=0;endArrow=blockThin;endFill=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="860" y="550" as="sourcePoint" />
+            <mxPoint x="40" y="560" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
+
+

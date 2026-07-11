@@ -1,0 +1,76 @@
+﻿<mxfile host="drawio-plugin" modified="2026-07-11T03:12:11.184Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36" version="22.1.22" etag="CK-yvp5SiEzEC0UuENOh" type="embed">
+  <diagram id="c3-pokemon-flow" name="C3 — Componentes Específicos">
+    <mxGraphModel dx="721" dy="409" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1700" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" value="&lt;b&gt;Componentes Específicos&lt;/b&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=top;fontSize=18;fontFamily=Inter;fontColor=#1E1E1E;" parent="1" vertex="1">
+          <mxGeometry x="420" y="10" width="700" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="api" value="" style="rounded=1;whiteSpace=wrap;html=1;fontSize=13;fontFamily=Inter;fillColor=#E3F2FD;strokeColor=#1565C0;fontColor=#0D47A1;align=center;verticalAlign=middle;arcSize=10;" parent="1" vertex="1">
+          <mxGeometry x="100" y="100" width="1480" height="820" as="geometry" />
+        </mxCell>
+        <mxCell id="userController" value="&lt;b&gt;User Controller&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;fontFamily=Inter;fillColor=#FFEBEE;strokeColor=#E53935;fontColor=#B71C1C;align=center;verticalAlign=middle;arcSize=10;" parent="1" vertex="1">
+          <mxGeometry x="120" y="140" width="180" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="authController" value="&lt;b&gt;Auth Controller&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;fontFamily=Inter;fillColor=#FFEBEE;strokeColor=#E53935;fontColor=#B71C1C;align=center;verticalAlign=middle;arcSize=10;" parent="1" vertex="1">
+          <mxGeometry x="120" y="240" width="180" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="pokemonController" value="&lt;b&gt;Pokemon Controller&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;fontFamily=Inter;fillColor=#FFEBEE;strokeColor=#E53935;fontColor=#B71C1C;align=center;verticalAlign=middle;arcSize=10;" parent="1" vertex="1">
+          <mxGeometry x="120" y="340" width="180" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="userService" value="&lt;b&gt;User Service&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;fontFamily=Inter;fillColor=#E0F7FA;strokeColor=#00ACC1;fontColor=#006064;align=center;verticalAlign=middle;arcSize=10;" parent="1" vertex="1">
+          <mxGeometry x="370" y="190" width="180" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="pokemonService" value="&lt;b&gt;Pokemon Service&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;fontFamily=Inter;fillColor=#E0F7FA;strokeColor=#00ACC1;fontColor=#006064;align=center;verticalAlign=middle;arcSize=10;" parent="1" vertex="1">
+          <mxGeometry x="370" y="310" width="180" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="userPersistence" value="&lt;b&gt;User Persistence Adapter&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;fontFamily=Inter;fillColor=#E8F5E9;strokeColor=#43A047;fontColor=#1B5E20;align=center;verticalAlign=middle;arcSize=10;" parent="1" vertex="1">
+          <mxGeometry x="620" y="170" width="220" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="pokemonPersistence" value="&lt;b&gt;Pokemon Persistence Adapter&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;fontFamily=Inter;fillColor=#E8F5E9;strokeColor=#43A047;fontColor=#1B5E20;align=center;verticalAlign=middle;arcSize=10;" parent="1" vertex="1">
+          <mxGeometry x="620" y="300" width="220" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="jpaRepo" value="&lt;b&gt;JPA Repository&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;fontFamily=Inter;fillColor=#FFF3E0;strokeColor=#FB8C00;fontColor=#E65100;align=center;verticalAlign=middle;arcSize=10;" parent="1" vertex="1">
+          <mxGeometry x="910" y="170" width="180" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="mongoRepo" value="&lt;b&gt;Mongo Repository&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;fontFamily=Inter;fillColor=#FFF3E0;strokeColor=#FB8C00;fontColor=#E65100;align=center;verticalAlign=middle;arcSize=10;" parent="1" vertex="1">
+          <mxGeometry x="910" y="300" width="180" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="postgres" value="&lt;b&gt;PostgreSQL&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;fontFamily=Inter;fillColor=#FFF3E0;strokeColor=#FB8C00;fontColor=#E65100;align=center;verticalAlign=middle;arcSize=10;" parent="1" vertex="1">
+          <mxGeometry x="1170" y="170" width="150" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="mongo" value="&lt;b&gt;MongoDB&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;fontFamily=Inter;fillColor=#E1F5FE;strokeColor=#039BE5;fontColor=#01579B;align=center;verticalAlign=middle;arcSize=10;" parent="1" vertex="1">
+          <mxGeometry x="1170" y="300" width="150" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="c1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#E53935;strokeWidth=1.8;exitX=1;exitY=0.5;entryX=0;entryY=0.5;endArrow=blockThin;endFill=1;" parent="1" source="userController" target="userService" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="c2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#E53935;strokeWidth=1.8;exitX=1;exitY=0.5;entryX=0;entryY=0.5;endArrow=blockThin;endFill=1;" parent="1" source="authController" target="userService" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="c3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#E53935;strokeWidth=1.8;exitX=1;exitY=0.5;entryX=0;entryY=0.5;endArrow=blockThin;endFill=1;" parent="1" source="pokemonController" target="pokemonService" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="c4" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#00ACC1;strokeWidth=1.8;exitX=1;exitY=0.5;entryX=0;entryY=0.5;endArrow=blockThin;endFill=1;" parent="1" source="userService" target="userPersistence" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="c5" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#00ACC1;strokeWidth=1.8;exitX=1;exitY=0.5;entryX=0;entryY=0.5;endArrow=blockThin;endFill=1;" parent="1" source="pokemonService" target="pokemonPersistence" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="c6" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#43A047;strokeWidth=1.5;exitX=1;exitY=0.5;entryX=0;entryY=0.5;endArrow=blockThin;endFill=1;" parent="1" source="userPersistence" target="jpaRepo" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="c7" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#43A047;strokeWidth=1.5;exitX=1;exitY=0.5;entryX=0;entryY=0.5;endArrow=blockThin;endFill=1;" parent="1" source="pokemonPersistence" target="mongoRepo" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="c8" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#FB8C00;strokeWidth=1.5;exitX=1;exitY=0.5;entryX=0;entryY=0.5;endArrow=blockThin;endFill=1;" parent="1" source="jpaRepo" target="postgres" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="c9" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#039BE5;strokeWidth=1.5;exitX=1;exitY=0.5;entryX=0;entryY=0.5;endArrow=blockThin;endFill=1;" parent="1" source="mongoRepo" target="mongo" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

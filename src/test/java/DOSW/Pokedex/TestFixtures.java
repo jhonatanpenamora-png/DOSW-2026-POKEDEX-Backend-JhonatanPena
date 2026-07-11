@@ -1,7 +1,7 @@
 package DOSW.Pokedex;
 
-import DOSW.Pokedex.core.model.Pokemon;
-import DOSW.Pokedex.core.model.PokemonStats;
+import DOSW.Pokedex.model.Pokemon;
+import DOSW.Pokedex.model.PokemonStats;
 
 import java.util.List;
 

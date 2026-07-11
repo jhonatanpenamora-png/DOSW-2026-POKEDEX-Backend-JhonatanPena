@@ -1,7 +1,7 @@
 package DOSW.Pokedex.security;
 
-import DOSW.Pokedex.core.model.User;
-import DOSW.Pokedex.core.service.interfaces.AuthService;
+import DOSW.Pokedex.model.User;
+import DOSW.Pokedex.service.AuthService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;

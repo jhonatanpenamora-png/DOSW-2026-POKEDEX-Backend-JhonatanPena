@@ -1,7 +1,7 @@
 package DOSW.Pokedex.security;
 
-import DOSW.Pokedex.core.model.User;
-import DOSW.Pokedex.core.service.interfaces.UserPersistencePort;
+import DOSW.Pokedex.model.UserEntity;
+import DOSW.Pokedex.repository.UserJpaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -13,12 +13,12 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class UserDetailsServiceImpl implements UserDetailsService {
 
-    private final UserPersistencePort userPort;
+    private final UserJpaRepository userPort;
 
     @Override
     @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        User user = userPort.findByEmail(email)
+        UserEntity user = userPort.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado: " + email));
 
         return org.springframework.security.core.userdetails.User.builder()
