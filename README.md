@@ -66,8 +66,6 @@ Muestra el sistema como una **caja negra** con sus actores e integraciones exter
 
 **Archivo:** [`diagrams/c1-context.drawio`](diagrams/c1-context.drawio)
 
-![Diagrama de Casos de Uso](diagrams/Diagrama%20de%20casos%20de%20uso.png)
-
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │  Personas:    Usuario (Entrenador)    Administrador          │
@@ -101,7 +99,6 @@ Muestra las **5 capas internas** del sistema y sus responsabilidades principales
 
 **Archivo:** [`diagrams/c2-components.drawio`](diagrams/c2-components.drawio)
 
-![Diagrama de Componentes](diagrams/Diagrama%20de%20componentes.png)
 
 | Capa | Color | Componentes | Responsabilidad |
 |---|---|---|---|
@@ -125,7 +122,6 @@ Muestra el flujo completo de una petición `GET /api/v1/pokemon/{id}` a través 
 
 **Archivo:** [`diagrams/c3-pokemon-flow.drawio`](diagrams/c3-pokemon-flow.drawio)
 
-![Diagrama de Componentes Específico](diagrams/Diagrama%20de%20componentes%20especifico.png)
 
 **Pasos del flujo:**
 
@@ -164,7 +160,6 @@ Muestra las **clases principales (entidades JPA)**, sus atributos y relaciones. 
 
 **Archivo:** [`diagrams/c4-classes.drawio`](diagrams/c4-classes.drawio)
 
-![Diagrama de Clases](diagrams/Diagrama%20de%20clases%20capa%20core.png)
 
 **Entidades principales:**
 
@@ -201,46 +196,8 @@ Dos sub-diagramas en un mismo archivo:
 
 **Archivo:** [`diagrams/c5-er-mongodb.drawio`](diagrams/c5-er-mongodb.drawio)
 
-![Diagrama Entidad Relación](diagrams/Diagrama%20entidad%20relacion.png)
 
-#### Parte A: Entidad-Relación PostgreSQL (10 tablas)
 
-```
-┌──────────┐    ┌────────────────┐    ┌──────────┐
-│  region  │    │  pokemon_type  │    │   type   │
-├──────────┤    │ (N:M join)     │    ├──────────┤
-│ PK id    │◄───│ FK pokemon_id  │───►│ PK id    │
-└──────────┘    │ FK type_id     │    └──────────┘
-                └────────────────┘
-      │
-┌──────────┐    ┌────────────────┐    ┌──────────┐
-│ pokemon  │    │pokemon_ability │    │ ability  │
-├──────────┤    │ (N:M join)     │    ├──────────┤
-│ PK id    │◄───│ FK pokemon_id  │───►│ PK id    │
-│ FK reg_id│    │ FK ability_id  │    └──────────┘
-└──────────┘    └────────────────┘
-      │
-      ├─── 1:1 ─── pokemon_stats
-      ├─── 1:N ─── evolution
-      └─── 1:N ─── pokemon_move ── N:1 ── move
-
-┌──────────┐    ┌──────────┐    ┌──────────────┐
-│  users   │    │  teams   │    │ team_pokemon │
-├──────────┤    ├──────────┤    ├──────────────┤
-│ PK id    │───►│ PK id    │───►│ PK id        │
-│ (OAuth2) │    │ FK user  │    │ FK team      │
-└──────────┘    └──────────┘    │ FK pokemon    │
-      │                         └──────────────┘
-      └─── 1:N ─── favorites ── N:1 ── pokemon
-
-┌──────────────┐    ┌──────────┐
-│  audit_log   │    │ pokemon  │
-├──────────────┤    └──────────┘
-│ PK id        │
-│ FK user_id   │
-│ entity_type  │
-└──────────────┘
-```
 
 **Tablas:**
 | Esquema | Tablas | Propósito |
@@ -250,13 +207,6 @@ Dos sub-diagramas en un mismo archivo:
 | **Usuarios** | `users`, `teams`, `team_pokemon`, `favorites` | Datos de usuario, equipos y favoritos |
 | **Auditoría** | `audit_log` | Trazabilidad de acciones |
 
-#### Parte B: Documentos MongoDB (3 colecciones)
-
-| Colección | Documento | Propósito | Índices |
-|---|---|---|---|
-| `team_stats` | `{ team_id, total_battles, win_rate, average_level, type_distribution, last_updated }` | Estadísticas agregadas de equipos | `team_id` (único) |
-| `pokemon_view` | `{ pokemon_id, total_views, unique_users, last_viewed, daily_views[] }` | Contador de vistas por Pokémon | `pokemon_id` (único) |
-| `view_history` | `{ user_id, pokemon_id, timestamp, action }` | Historial de vistas (serie temporal) | TTL index en `timestamp` (30 días) |
 
 **Estrategia de persistencia híbrida:**
 - **PostgreSQL** → Datos relacionales estructurados (Pokémon, usuarios, equipos, transacciones)
